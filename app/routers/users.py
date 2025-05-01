@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from sqlalchemy import select, insert
+import datetime
 
 from app.models import User, UserCreate, Token
 from app.auth import (
@@ -50,12 +51,16 @@ async def create_user(user: UserCreate, background_tasks: BackgroundTasks):
             detail="Email or username already registered",
         )
     
-    # Create new user
+    # Create new user with explicit values for all required fields
+    current_time = datetime.datetime.utcnow()
     hashed_password = get_password_hash(user.password)
+
     query = insert(users).values(
         email=user.email,
         username=user.username,
         hashed_password=hashed_password,
+        disabled=False,
+        created_at=current_time
     )
     user_id = await database.execute(query)
     
