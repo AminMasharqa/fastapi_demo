@@ -14,6 +14,8 @@ class UserCreate(UserBase):
 
 class UserInDB(UserBase):
     id: int
+    hashed_password: str  # This field must match exactly what you're trying to access
+
     disabled: bool = False
     created_at: datetime
 

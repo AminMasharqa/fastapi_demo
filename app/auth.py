@@ -32,7 +32,7 @@ def get_password_hash(password):
 
 # Get user by username
 async def get_user(username: str):
-    query = select([users]).where(users.c.username == username)
+    query = select(users).where(users.c.username == username)
     user = await database.fetch_one(query)
     if user:
         return UserInDB(**user)
